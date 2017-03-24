@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Your Wish List</title>
+  </head>
+  <body>
+    <h2>Hello, {{ request.session.current_user.name }}!</h2>
+    <form action="{% url 'log_reg:logout' %}" method="post" style="display:inline-block;">
+      {% csrf_token %}
+      <input type="submit" name="logout" value="Logout">
+    </form>
+    <h3>Your Wishlist</h3>
+    <table border="1px" cellpadding="5px">
+      <thead>
+        <tr>
+          <th>Item</th><th>Added By</th><th>Date Added</th><th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in wishlist.items_by_wishlist.all %}
+        <tr>
+          <td><a href="{% url 'wish_list:item' item_id=item.id %}">{{item.name}}</a></td><td>{{item.user.name}}</td><td>{{item.created_at}}</td>
+          <td>{% if item.user == current_user %} <a href="{% url 'wish_list:delete_item' item_id=item.id %}">Delete</a> {% else %} <a href="{% url 'wish_list:remove_from_wishlist' user_id=request.session.current_user.id item_id=item.id %}">Remove from my wishlist</a> {% endif %}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+
+    </table>
+
+    <h3>Other Users' Wishlist</h3>
+    <table border="1px" cellpadding="5px">
+      <thead>
+        <tr>
+          <th>Item</th><th>Added By</th><th>Date Added</th><th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in other_items %}
+        <tr>
+          <td><a href="{% url 'wish_list:item' item_id=item.id %}">{{item.name}}</a></td><td>{{item.user.name}}</td><td>{{item.created_at}}</td>
+          <td><a href="{% url 'wish_list:add_to_wishlist' user_id=request.session.current_user.id item_id=item.id %}">Add to my wishlist</a></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+
+    </table>
+
+
+    <a href="{% url 'wish_list:add_item' %}">Add Item</a>
+
+  </body>
+</html>

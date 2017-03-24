@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Add Item</title>
+  </head>
+  <body>
+    <h2>Hello, {{ request.session.current_user.name }}!</h2>
+    <form action="{% url 'log_reg:logout' %}" method="post" style="display:inline-block;">
+      {% csrf_token %}
+      <input type="submit" name="logout" value="Logout">
+    </form>
+    <form action="{% url 'wish_list:index' %}" method="post" style="display:inline-block;">
+      {% csrf_token %}
+       <input type="submit" name="home" value="Home">
+    </form>
+    <h1>Create a New Wish List Item</h1>
+    {% if messages %}
+      {% for message in messages %}
+        <h2>{{ message }}</h2>
+      {% endfor %}
+    {% endif %}
+    <form action="{% url 'wish_list:create_item' user_id=request.session.current_user.id %}" method="post">
+      {% csrf_token %}
+      Item/Product: <input type="text" name="item">
+      <input type="submit" name="add" value="Add">
+    </form>
+  </body>
+</html>

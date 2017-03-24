@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>{{item.name}}</title>
+  </head>
+  <body>
+    <h2>Hello, {{ request.session.current_user.name }}!</h2>
+    <form action="{% url 'log_reg:logout' %}" method="post" style="display:inline-block;">
+      {% csrf_token %}
+      <input type="submit" name="logout" value="Logout">
+    </form>
+    <form action="{% url 'wish_list:index' %}" method="post" style="display:inline-block;">
+      {% csrf_token %}
+       <input type="submit" name="home" value="Home">
+    </form>
+    <h1>{{item.name}}</h1>
+    <p>Users who added this product/item under their wish list:</p>
+    {% for wishlist in wishlists %}
+      <p>{{wishlist.user.name}}</p>
+    {% endfor %}
+  </body>
+</html>
